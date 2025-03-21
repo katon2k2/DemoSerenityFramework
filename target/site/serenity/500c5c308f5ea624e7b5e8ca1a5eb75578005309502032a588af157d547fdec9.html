@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Serenity Reports</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" sizes="57x57" href="apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="bootstrap-icons/bootstrap-icons.css">
+<!-- JQuery -->
+<script type="text/javascript" src="scripts/jquery-1.11.1.min.js"></script><!-- Required Stylesheets -->
+<link href="bootstrap-treeview/dist/bootstrap-treeview.min.css" rel="stylesheet">
+
+<!-- Required Javascript -->
+<script src="bootstrap-treeview/dist/bootstrap-treeview.min.js"></script><!-- DataTables -->
+<link type="text/css" href="datatables/1.13.1/datatables.min.css" rel="stylesheet" />
+<script type="text/javascript" src="datatables/1.13.1/datatables.min.js"></script>
+<script type="text/javascript" src="datatables/1.13.1/time-elapsed-dhms.js"></script>
+
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+
+<script>
+    jQuery.fn.dataTable.ext.type.order['time-elapsed-dhms-pre'] = function(data) {
+
+        var matches = data.match(/^(\d+(?:\.\d+)?)\s*([a-z]+)/i);
+        var multipliers = {
+            ms: 1,
+            s: 1000,
+            m: 60000,
+            h: 3600000,
+            d: 86400000
+        };
+
+        if (matches) {
+            var multiplier = multipliers[matches[2].toLowerCase()];
+            return parseFloat(matches[1]) * multiplier;
+        } else {
+            return -1;
+        };
+    };
+</script>
+<link rel="stylesheet" href="css/core.css"/>
+<link rel="stylesheet" href="css/link.css"/>
+<link type="text/css" media="screen" href="css/screen.css" rel="Stylesheet"/>
+<!--CHART.JS-->
+<script src="chartjs/chart.js"></script>
+<script src="chartjs/chartjs-plugin-datalabels@2.0.0.min.js"></script>
+<script src="chartjs/patternomaly.min.js"></script>
+<script>
+    // Register the plugin to all charts:
+    Chart.register(ChartDataLabels);
+</script>
+<!-- JQuery-UI -->
+<link type="text/css" href="jqueryui/1.11.2-start/jquery-ui.min.css" rel="Stylesheet" />
+<script type="text/javascript" src="jqueryui/1.11.2-start/jquery-ui.min.js"></script><!-- DataTables -->
+<link type="text/css" href="datatables/1.13.1/datatables.min.css" rel="stylesheet" />
+<script type="text/javascript" src="datatables/1.13.1/datatables.min.js"></script>
+<script type="text/javascript" src="datatables/1.13.1/time-elapsed-dhms.js"></script>
+
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+
+<script>
+    jQuery.fn.dataTable.ext.type.order['time-elapsed-dhms-pre'] = function(data) {
+
+        var matches = data.match(/^(\d+(?:\.\d+)?)\s*([a-z]+)/i);
+        var multipliers = {
+            ms: 1,
+            s: 1000,
+            m: 60000,
+            h: 3600000,
+            d: 86400000
+        };
+
+        if (matches) {
+            var multiplier = multipliers[matches[2].toLowerCase()];
+            return parseFloat(matches[1]) * multiplier;
+        } else {
+            return -1;
+        };
+    };
+</script>
+
+
+
+    <script class="code" type="text/javascript">$(document).ready(function () {
+
+
+            $("#scenario-results").DataTable({
+                "order": [[0, "asc",], [3, "asc",]],
+                "language": {
+                    searchPlaceholder: "Filter",
+                    search: ""
+                },
+                columnDefs: [
+                    {type: 'time-elapsed-dhms', targets: 4}
+                ]
+            })
+            $("#manual-scenario-results").DataTable({
+                "order": [[0, "asc",], [1, "asc",]],
+                "language": {
+                    searchPlaceholder: "Filter",
+                    search: ""
+                },
+            })
+
+        // Results table
+        $('#test-results-table').DataTable({
+            "order": [[0, "asc",], [3, "asc",]],
+            "pageLength": 100,
+            "lengthMenu": [[25, 50, 100, 200, -1], [25, 50, 100, 200, "All"]]
+        });
+
+    })
+    ;
+    </script>
+</head>
+
+<body class="results-page">
+<div id="topheader">
+    <div id="topbanner">
+        <div id="logo"><a href="index.html"><img src="images/serenity-logo.png" border="0"/></a></div>
+        <div id="projectname-banner" style="float:right">
+            <span class="projectname">
+                <span class="projecttitle">Serenity BDD Report</span>
+                <span class="projectsubtitle"></span>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="middlecontent">
+
+
+    <div id="contenttop">
+        <div class="middlebg">
+        <span class="breadcrumbs"><a href="index.html">Home</a>
+                > Capability 
+                > <span
+                    class="truncate-60">Test > Duration 1 To 10 Seconds</span>
+        </span>
+        </div>
+        <div class="rightbg"></div>
+    </div>
+
+    <div class="clr"></div>
+    <!--/* starts second table*/-->
+<div>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#"><i class="bi bi-journal-check"></i> Overall Test Results</a>
+        </li>
+        <li >
+            <a href="capabilities.html"><i class="bi bi-journal-text"></i> Requirements</a>
+        </li>
+        <li >
+            <a href="7ea0a5e2d679b9deeda9910ae4a9bcd3a281e0d908303a9e16e486103e98880c.html"><i class="bi bi-chat-text"></i> Capabilities</a>
+        </li>
+        <li >
+            <a href="576946480b52ad056d6f5bddf874399c83582ecf90963cc074a14c70580e7d9f.html"><i class="bi bi-chat-text"></i> Features</a>
+        </li>
+    </ul>
+    <span class="date-and-time"><a href="build-info.html"><i class="bi bi-info-circle"></i></a> Report generated 21-03-2025 23:58:41</span>
+    <br style="clear:left"/>
+</div>
+    <div class="clr"></div>
+    <div id="beforetable"></div>
+    <div id="results-dashboard">
+        <div class="middlb">
+            <div class="table">
+
+                <h2><i class='bi bi-tags'></i> Capability: Test > Duration 1 To 10 Seconds</h2>
+                <table class='overview'>
+                    <tr>
+                        <td width="375px" valign="top">
+                            <div class="test-count-summary">
+                                <div>
+
+                                    63 tests
+
+                                     |
+                                        <a href="5947d75bffc99870ee2b52c92f1bd92fcca0220097a0566270cf196659f7865c.csv" title="Download CSV"> <i class="bi bi-cloud-arrow-down" title="Download CSV"></i></a>
+
+                                    <p class="report-info"><i class="bi bi-info-circle"></i> Note that results include
+                                        data-driven scenarios containing tests ,
+                                        which may also contain results other than tests .</p>
+
+
+
+                                </div>
+                            </div>
+
+                            <div>
+                                <ul class="nav nav-tabs">
+                                    <li class="active">
+                                        <a data-toggle="tab" href="#summary"><i class="bi bi-house-door"></i> Summary</a>
+                                    </li>
+                                    <li>
+                                        <a data-toggle="tab" href="#tests"><i class="bi bi-speedometer"></i> Test
+                                            Results</a>
+                                    </li>
+                                </ul>
+
+                                <div class="card border">
+                                    <div class="tab-content" id="pills-tabContent">
+                                        <div id="summary" class="tab-pane fade in active">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+    <div>
+        <h3><i class="bi bi-speedometer2"></i> Key Statistics</h3>
+        <div>
+            <table class="table table-striped table-hover">
+                <tbody>
+                <tr scope="row">
+                    <td>
+                        <i class="bi bi-card-checklist"></i> Number of Scenarios
+                    </td>
+                    <td>63</td>
+                </tr>
+                <tr scope="row">
+                    <td>
+                        <i class="bi bi-caret-right"></i> Total Number of Test Cases
+                    </td>
+                    <td>63</td>
+                </tr>
+                <tr scope="row">
+                    <td>
+                        <i class="bi bi-flag-fill"></i> Tests Started
+                    </td>
+                    <td>Mar 21, 2025 23:46:11</td>
+                </tr>
+                <tr scope="row">
+                    <td>
+                        <i class="bi bi-stop-circle"></i> Tests
+                        Finished
+                    </td>
+                    <td>Mar 21, 2025 23:58:19</td>
+                </tr>
+                <tr scope="row">
+                    <td>
+                        <i class="bi bi-stopwatch"></i> Total
+                        Duration
+                    </td>
+                    <td> 12m 8s</td>
+                </tr>
+                <tr scope="row">
+                    <td>
+                        <i class="bi bi-trophy"></i> Fastest Test
+                    </td>
+                    <td>2s</td>
+                </tr>
+                <tr scope="row">
+                    <td>
+                        <i class="bi bi-skip-start"></i> Slowest
+                        Test
+                    </td>
+                    <td>7s</td>
+                </tr>
+                <tr scope="row">
+                    <td>
+                        <i class="bi bi-stopwatch"></i> Average
+                        Execution Time
+                    </td>
+                    <td>5s</td>
+                </tr>
+                <tr scope="row">
+                    <td>
+                        <i class="bi bi-stopwatch-fill"></i> Total
+                        Execution Time
+                    </td>
+                    <td> 5m 24s</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <h4><i class="bi bi-check-square"></i> Test Outcomes</h4>
+                                                        <!-- Severity bar chart -->
+                                                        <div class="chart-container" style="position: relative; width:30vw">
+                                                            <canvas id="severityChart" width="300" height="300"></canvas>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-4">
+                                                        <h4><i class="bi bi-graph-up"></i> Test Performance</h4>
+
+                                                        <!-- Duration bar chart -->
+                                                        <div class="chart-container" style="position: relative; width:30vw">
+                                                            <canvas id="durationChart" width="300" height="300"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <!-- High level coverage bar chart -->
+                                                            <div class="chart-container" style="position: relative; width:60vw">
+                                                                <h3><i class="bi bi-reception-3"></i> Functional Coverage Overview</h3>
+                                                                <h4>Features</h4>
+                                                                <canvas id="coverageChart"></canvas>
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-sm-11">
+                                                            <h3>Functional Coverage Details</h3>
+
+
+                                                                    <h4>Features</h4>
+
+                                                                    <table class="table feature-coverage-table" id="Feature">
+                                                                        <thead>
+                                                                        <tr>
+                                                                            <th>Feature</th>
+                                                                            <th style="width:1em;">Test&nbsp;Cases</th>
+                                                                            <th style="width:1em;">Scenarios</th>
+                                                                            <th style="width:1em;">%&nbsp;Pass</th>
+                                                                            <th style="width:1em;">Result</th>
+                                                                            <th>Coverage</th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                            <a href="22cbb4a362c7cf8d5835a8234cb776dc188bbc2efb66f5a77d7a638079f9c5fd.html" > Api</a>
+                                                                                    </td>
+                                                                                    <td>1</td>
+                                                                                    <td>1</td>
+                                                                                    <td>100%</td>
+                                                                                    <td>
+                                                                                            <a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="progress">
+                                                                                                <div class="progress-bar"
+                                                                                                     role="progressbar"
+                                                                                                     style="width: 100%; background-color: #b0cf73"
+                                                                                                     aria-valuenow="1"
+                                                                                                     title="100% success"
+                                                                                                     aria-valuemin="0"
+                                                                                                     aria-valuemax="100">
+                                                                                                </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                            <a href="63ca2ade8752b5f05864e25ae81a2c7a3f6adb9aadff7e7db6febc0db1b5246e.html" > Api test</a>
+                                                                                    </td>
+                                                                                    <td>1</td>
+                                                                                    <td>1</td>
+                                                                                    <td>100%</td>
+                                                                                    <td>
+                                                                                            <a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="progress">
+                                                                                                <div class="progress-bar"
+                                                                                                     role="progressbar"
+                                                                                                     style="width: 100%; background-color: #b0cf73"
+                                                                                                     aria-valuenow="1"
+                                                                                                     title="100% success"
+                                                                                                     aria-valuemin="0"
+                                                                                                     aria-valuemax="100">
+                                                                                                </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                            <a href="09f731f5460ab6c0020d87f3947a2ec1d6d78a3855b408c55746f567f4da2415.html" > Web</a>
+                                                                                    </td>
+                                                                                    <td>62</td>
+                                                                                    <td>62</td>
+                                                                                    <td>100%</td>
+                                                                                    <td>
+                                                                                            <a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="progress">
+                                                                                                <div class="progress-bar"
+                                                                                                     role="progressbar"
+                                                                                                     style="width: 100%; background-color: #b0cf73"
+                                                                                                     aria-valuenow="62"
+                                                                                                     title="100% success"
+                                                                                                     aria-valuemin="0"
+                                                                                                     aria-valuemax="100">
+                                                                                                </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                            <a href="638debdcad9b2d6f8786e08c886b952842c0a8d3741845708dfa034821c80203.html" > Login test</a>
+                                                                                    </td>
+                                                                                    <td>7</td>
+                                                                                    <td>7</td>
+                                                                                    <td>100%</td>
+                                                                                    <td>
+                                                                                            <a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="progress">
+                                                                                                <div class="progress-bar"
+                                                                                                     role="progressbar"
+                                                                                                     style="width: 100%; background-color: #b0cf73"
+                                                                                                     aria-valuenow="7"
+                                                                                                     title="100% success"
+                                                                                                     aria-valuemin="0"
+                                                                                                     aria-valuemax="100">
+                                                                                                </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                            <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html" > Register test</a>
+                                                                                    </td>
+                                                                                    <td>32</td>
+                                                                                    <td>32</td>
+                                                                                    <td>100%</td>
+                                                                                    <td>
+                                                                                            <a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="progress">
+                                                                                                <div class="progress-bar"
+                                                                                                     role="progressbar"
+                                                                                                     style="width: 100%; background-color: #b0cf73"
+                                                                                                     aria-valuenow="32"
+                                                                                                     title="100% success"
+                                                                                                     aria-valuemin="0"
+                                                                                                     aria-valuemax="100">
+                                                                                                </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                            <a href="8bf45a15f44e95f552803b72f8cd5fab90c7b7fd47c8252cdebe2149638954cb.html" > Show info test</a>
+                                                                                    </td>
+                                                                                    <td>3</td>
+                                                                                    <td>3</td>
+                                                                                    <td>100%</td>
+                                                                                    <td>
+                                                                                            <a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="progress">
+                                                                                                <div class="progress-bar"
+                                                                                                     role="progressbar"
+                                                                                                     style="width: 100%; background-color: #b0cf73"
+                                                                                                     aria-valuenow="3"
+                                                                                                     title="100% success"
+                                                                                                     aria-valuemin="0"
+                                                                                                     aria-valuemax="100">
+                                                                                                </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                            <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html" > Update info test</a>
+                                                                                    </td>
+                                                                                    <td>20</td>
+                                                                                    <td>20</td>
+                                                                                    <td>100%</td>
+                                                                                    <td>
+                                                                                            <a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="progress">
+                                                                                                <div class="progress-bar"
+                                                                                                     role="progressbar"
+                                                                                                     style="width: 100%; background-color: #b0cf73"
+                                                                                                     aria-valuenow="20"
+                                                                                                     title="100% success"
+                                                                                                     aria-valuemin="0"
+                                                                                                     aria-valuemax="100">
+                                                                                                </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                        </div>
+                                                    </div>
+
+                                            </div>
+                                            <div class="container-fluid">
+                                            </div>
+                                        </div>
+                                        <div id="tests" class="tab-pane fade in">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <h3><i class="bi bi-gear"></i> Automated Tests</h3>
+
+                                            <table class="scenario-result-table table" id="scenario-results">
+                                                <thead>
+                                                <tr>
+                                                    <th>feature</th>
+                                                    <th class="test-name-column">Scenario</th>
+                                                    <th>Steps</th>
+                                                    <th>Started</th>
+                                                    <th>Total Duration</th>
+                                                    <th>Result</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="63ca2ade8752b5f05864e25ae81a2c7a3f6adb9aadff7e7db6febc0db1b5246e.html">ApiTest</a>
+                                                            </td>
+                                                            <td><a href="a82054c73cf8e498ed40348955d225fc07eed4f2d9193c7cae86ce888850993e.html">kiểm tra api đăng ký tài khoản</a></td>
+                                                            <td>0</td>
+                                                            <td>23:46:11</td>
+                                                            <td>2s 954ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="638debdcad9b2d6f8786e08c886b952842c0a8d3741845708dfa034821c80203.html">LoginTest</a>
+                                                            </td>
+                                                            <td><a href="91d9ffc65786725b37fb1373a2229bbb109a7d5d5c18d4a6071f2829604a20e9.html">Kiểm tra hiển thị trang đăng nhập</a></td>
+                                                            <td>2</td>
+                                                            <td>23:46:16</td>
+                                                            <td>6s 785ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="638debdcad9b2d6f8786e08c886b952842c0a8d3741845708dfa034821c80203.html">LoginTest</a>
+                                                            </td>
+                                                            <td><a href="b7880ad352cce35cff7f82394b079494661b77c7711f84a48a58c20866cb6aa4.html">kiểm tra đăng nhập thành công</a></td>
+                                                            <td>6</td>
+                                                            <td>23:46:23</td>
+                                                            <td>5s 227ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="638debdcad9b2d6f8786e08c886b952842c0a8d3741845708dfa034821c80203.html">LoginTest</a>
+                                                            </td>
+                                                            <td><a href="fd3bdc210cb03da12c324df79fec37c3a02e2354a250951c4e6220e2dd1a7f40.html">kiểm tra bấm nút đăng ký</a></td>
+                                                            <td>3</td>
+                                                            <td>23:46:32</td>
+                                                            <td>3s 296ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="638debdcad9b2d6f8786e08c886b952842c0a8d3741845708dfa034821c80203.html">LoginTest</a>
+                                                            </td>
+                                                            <td><a href="6e4dcad81e1b9435e1a5b00b36ccf6f8bbd7233d0137765fe3ec1e76368122d9.html">kiểm tra bỏ trống mật khẩu</a></td>
+                                                            <td>5</td>
+                                                            <td>23:46:40</td>
+                                                            <td>5s 637ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="638debdcad9b2d6f8786e08c886b952842c0a8d3741845708dfa034821c80203.html">LoginTest</a>
+                                                            </td>
+                                                            <td><a href="6e6f58dd7bab949162273f457b4b501ce3c4dbf6ed2f41c39c1d8f7fdccdce3f.html">kiểm tra nhập sai tài khoản</a></td>
+                                                            <td>6</td>
+                                                            <td>23:46:48</td>
+                                                            <td>3s 214ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="638debdcad9b2d6f8786e08c886b952842c0a8d3741845708dfa034821c80203.html">LoginTest</a>
+                                                            </td>
+                                                            <td><a href="cc697a513ae3354e592ad7f27bd444b784af5df6c23bb649c20e383d658c1292.html">kiểm tra bỏ trống tài khoản</a></td>
+                                                            <td>5</td>
+                                                            <td>23:46:59</td>
+                                                            <td>5s 863ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="638debdcad9b2d6f8786e08c886b952842c0a8d3741845708dfa034821c80203.html">LoginTest</a>
+                                                            </td>
+                                                            <td><a href="8d2375267795b0086105d30844da5187291d95e37d4e508cb3aa8f1f276a9eb6.html">kiểm tra nhập sai mật khẩu</a></td>
+                                                            <td>6</td>
+                                                            <td>23:47:08</td>
+                                                            <td>5s 813ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="5d516a1db1a5dc52cffd7fe38f20d2a43e349c9fee5e0a9dbe59806bd44b71e6.html">Kiểm tra hiển thị trang đăng ký</a></td>
+                                                            <td>2</td>
+                                                            <td>23:47:17</td>
+                                                            <td>5s 896ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="c77f088265af866e395e6f8ef2ac5a2ffcc5230b4f5f1bc25e1342ffe327d53e.html">kiểm tra đăng ký thành công</a></td>
+                                                            <td>10</td>
+                                                            <td>23:47:24</td>
+                                                            <td>5s 869ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="1d40ed624f8cd75e89b3b5fcb607f4c07cc01c7aff80922ce5aa5a00707b86c0.html">kiểm tra bỏ trống họ tên</a></td>
+                                                            <td>9</td>
+                                                            <td>23:47:34</td>
+                                                            <td>3s 163ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="728693e74486803469a2de902f1d28b252e9ead2e0a0fc484e891e6d5b51a38b.html">kiểm tra nhập mật khẩu > 30 ký tự</a></td>
+                                                            <td>10</td>
+                                                            <td>23:47:44</td>
+                                                            <td>5s 557ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="6cdb3196cf027bb1198a04cfc466e0ddfd020dd9a805178fc41142905c9adbe7.html">kiểm tra nhập họ tên > 50 ký tự</a></td>
+                                                            <td>10</td>
+                                                            <td>23:47:54</td>
+                                                            <td>5s 873ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="8b260fcf5dc16dbf9fc32aa8e25c5a7242fe07a60654bbc9280a83a5ebf38660.html">kiểm tra nhập email với đầu chỉ chứa khoảng trắng</a></td>
+                                                            <td>10</td>
+                                                            <td>23:48:05</td>
+                                                            <td>5s 645ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="1a49c18f9477f9773fa48df72e39331e4785f244761498e4740abee89b88444c.html">kiểm tra nhập số điện thoại > 10 ký tự</a></td>
+                                                            <td>10</td>
+                                                            <td>23:48:15</td>
+                                                            <td>5s 877ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="553c67f14ffb73e2d173e14556b359b0c60c7874db931c178c257d159b10e0a5.html">kiểm tra nhập tên đăng nhập đã tồn tại</a></td>
+                                                            <td>10</td>
+                                                            <td>23:48:25</td>
+                                                            <td>3s 154ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="33d3bd8aecda8379ef7ffec4b85f1435f5050adf329625878ae77753c4ad657d.html">kiểm tra nhập họ tên chỉ chứa khoảng trắng</a></td>
+                                                            <td>10</td>
+                                                            <td>23:48:35</td>
+                                                            <td>3s 208ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="0afbc0f6f6af30b91932464a63e2dbf3af72a04c64bc782cf883025c6a7d9e5b.html">kiểm tra nhập họ tên chứa chữ số</a></td>
+                                                            <td>10</td>
+                                                            <td>23:48:44</td>
+                                                            <td>5s 917ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="acd78e5d44bb862772cd19771418ccfd93de25b482275e994e253cf47205ecac.html">kiểm tra bấm nút đăng nhập</a></td>
+                                                            <td>3</td>
+                                                            <td>23:48:56</td>
+                                                            <td>3s 186ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="9da2fa9a8050106130e7afc081e880a2be01138a18e17ec9e692344db69f1014.html">kiểm tra nhập tên đăng nhập chỉ chứa khoảng trắng</a></td>
+                                                            <td>10</td>
+                                                            <td>23:49:03</td>
+                                                            <td>5s 667ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="81cc6d8b9e9fd9a2b05db9d968efb7dd063acbdc72fa72cc48222351d95b63f1.html">kiểm tra nhập họ tên chứa ký tự đặc biệt</a></td>
+                                                            <td>10</td>
+                                                            <td>23:49:13</td>
+                                                            <td>5s 549ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="bf3d7a5e8cc010c3bee92b380c66d44d6bbb444ae472513244dcccedaec10c4a.html">kiểm tra bỏ trống số địa chỉ email</a></td>
+                                                            <td>9</td>
+                                                            <td>23:49:24</td>
+                                                            <td>6s 204ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="d3ddc83c12045346b3f8e82f484e3fdb68017e19b24d4dcab45ebe7cfabba78d.html">kiểm tra bỏ trống số điện thoại</a></td>
+                                                            <td>9</td>
+                                                            <td>23:49:34</td>
+                                                            <td>5s 991ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="b6fb59273c63084f80b67fcea4d8ba406ae179a16eb5aaa080abab5a5c895ec9.html">kiểm tra nhập mật khẩu chỉ chứa khoảng trắng</a></td>
+                                                            <td>10</td>
+                                                            <td>23:49:44</td>
+                                                            <td>5s 905ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="ee70a13f03f0555412f7f61da7e6f04540dd990e379981881b54bfb4b64258d5.html">kiểm tra nhập tên đăng nhập > 30 ký tự</a></td>
+                                                            <td>10</td>
+                                                            <td>23:49:54</td>
+                                                            <td>5s 865ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="39d4225791676baee41e258563c7e333a785a52255beaf80e45257cd725113a8.html">kiểm tra nhập email > 255 ký tự</a></td>
+                                                            <td>10</td>
+                                                            <td>23:50:04</td>
+                                                            <td>3s 178ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="f411cdc559efc7cfbcf7c8c8a40f046acb34f737c1b5d54d566a8f1cb38778c4.html">kiểm tra nhập số điện thoại chứa chữ cái</a></td>
+                                                            <td>10</td>
+                                                            <td>23:50:14</td>
+                                                            <td>7s 470ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="781f3b835042fde584db4b361ac8361259a2542e898ab3e8bf1c2b1da744ecc0.html">kiểm tra nhập lại mật khẩu không khớp</a></td>
+                                                            <td>10</td>
+                                                            <td>23:50:26</td>
+                                                            <td>3s 181ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="8dbe0c2c2e9192852919db1d43f85afdaf3ef56a3e975520fae7e908b2e1e673.html">kiểm tra nhập email với đuôi không phải @gmail.com</a></td>
+                                                            <td>10</td>
+                                                            <td>23:50:36</td>
+                                                            <td>5s 612ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="dbfbf9cba9717dfbb4cb1d6c9327776526effeff59e58a8fcb5593f5f76f45e2.html">kiểm tra nhập mật khẩu < 6 ký tự</a></td>
+                                                            <td>10</td>
+                                                            <td>23:50:45</td>
+                                                            <td>3s 187ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="a4e025ab13265ca83a4f5fb1de4e3e1ef79a98d6b3c37074b15394c4fee1fd68.html">kiểm tra nhập tên đăng nhập chứa ký tự đặc biệt</a></td>
+                                                            <td>10</td>
+                                                            <td>23:50:56</td>
+                                                            <td>3s 153ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="160f580bdbeb07d6a8adcbc7aed476a205ce0978dd93b59cf51b17fb9f0ce01f.html">kiểm tra bỏ trống tên đăng nhập</a></td>
+                                                            <td>9</td>
+                                                            <td>23:51:07</td>
+                                                            <td>5s 921ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="8ec2f82b126bd58aa487f2e042f1a69b3a59360c81de16a150eb6921a2cb83f1.html">kiểm tra nhập tên đăng nhập < 6 ký tự</a></td>
+                                                            <td>10</td>
+                                                            <td>23:51:16</td>
+                                                            <td>3s 180ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="e435dd21de263b3ba3e87e76e13259186f0fecea9afb9c629fadab35701e8c2d.html">kiểm tra bỏ trống mật khẩu</a></td>
+                                                            <td>9</td>
+                                                            <td>23:51:27</td>
+                                                            <td>3s 199ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="2ab0b2b4f441f6141a9af02c7b2ea6f773fe702ef6b96ba844c8f13a4a1f968e.html">kiểm tra nhập số điện thoại < 10 ký tự</a></td>
+                                                            <td>10</td>
+                                                            <td>23:51:38</td>
+                                                            <td>6s 013ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="6de015a832944b3139824ea2dbd39cbf697c2ba0ce8cb68ceb87f21f7aebc75e.html">kiểm tra nhập số điện thoại chỉ chứa khoảng trắng</a></td>
+                                                            <td>10</td>
+                                                            <td>23:51:49</td>
+                                                            <td>5s 902ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="04b43f2a33d1ce7a81faa5dd1944b2c403cc41f64d901a73d12ae7a28f56acf4.html">kiểm tra nhập email chứa ký tự đặc biệt</a></td>
+                                                            <td>10</td>
+                                                            <td>23:51:59</td>
+                                                            <td>7s 363ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="38c7f87dc8ce5d604c8b21609836203de169a283926666997ad19120f01a3745.html">kiểm tra bỏ trống nhập lại mật khẩu</a></td>
+                                                            <td>9</td>
+                                                            <td>23:52:12</td>
+                                                            <td>5s 917ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="2f18aaae0e5745733a2eedfea8df1ea5d2ce0942aef4f1b8de57c075b945051d.html">kiểm tra nhập số điện thoại chứa ký tự đặc biệt</a></td>
+                                                            <td>10</td>
+                                                            <td>23:52:22</td>
+                                                            <td>5s 879ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html">RegisterTest</a>
+                                                            </td>
+                                                            <td><a href="dacfd1bf6c4382c1eb7bc283af67a0c342fd4f8f843f7e907487406b0a2f90f5.html">kiểm tra nhập tên đăng nhập bắt đầu bằng chữ số</a></td>
+                                                            <td>10</td>
+                                                            <td>23:52:32</td>
+                                                            <td>4s 580ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="8bf45a15f44e95f552803b72f8cd5fab90c7b7fd47c8252cdebe2149638954cb.html">ShowInfoTest</a>
+                                                            </td>
+                                                            <td><a href="5afe85225537e7cb607bcf659622a4a30820b14b71748bf86a2520a73d911256.html">kiểm tra bấm nút đăng xuất</a></td>
+                                                            <td>7</td>
+                                                            <td>23:52:49</td>
+                                                            <td>5s 873ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="8bf45a15f44e95f552803b72f8cd5fab90c7b7fd47c8252cdebe2149638954cb.html">ShowInfoTest</a>
+                                                            </td>
+                                                            <td><a href="de3f6786f1c50c49988fdf5061a0642ec5c06692220d0abe442cece5b20a67e5.html">kiểm tra bấm nút cập nhật</a></td>
+                                                            <td>7</td>
+                                                            <td>23:53:00</td>
+                                                            <td>5s 584ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="8bf45a15f44e95f552803b72f8cd5fab90c7b7fd47c8252cdebe2149638954cb.html">ShowInfoTest</a>
+                                                            </td>
+                                                            <td><a href="877c513ac3a9333e72e610bc340c0f1c3752ef4147719994c784d0f9b75689ea.html">kiểm tra hiển thị trang hiển thị thông tin</a></td>
+                                                            <td>6</td>
+                                                            <td>23:53:11</td>
+                                                            <td>5s 646ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="bc8f06ee3d3a203e7a179a9f59cef91492d4c194b420c812cd78094ae48021fb.html">Kiểm tra hiển thị trang cập nhật thông tin</a></td>
+                                                            <td>7</td>
+                                                            <td>23:53:22</td>
+                                                            <td>5s 534ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="0513c0ebcbdf33036bd191f3ba22e52157a2656881611a82538201a4c89cead4.html">kiểm tra cập nhật thông tin thành công</a></td>
+                                                            <td>13</td>
+                                                            <td>23:53:34</td>
+                                                            <td>3s 128ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="e4453cacf79bb32302710767b5fc118919cf9a7cc7264cf57abc6bf8ff56ca14.html">kiểm tra bấm nút trở về</a></td>
+                                                            <td>8</td>
+                                                            <td>23:53:50</td>
+                                                            <td>5s 629ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="b7ffc33ebaf74a367d38dc3804d19d81aa5eea90af915d492dcae5ba11672893.html">kiểm tra bỏ trống họ tên</a></td>
+                                                            <td>12</td>
+                                                            <td>23:54:03</td>
+                                                            <td>3s 202ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="dc8c4552bbc775e6306974d8540442d1de0380c929e4426ff3e1db571d82c53f.html">kiểm tra nhập họ tên > 50 ký tự</a></td>
+                                                            <td>13</td>
+                                                            <td>23:54:18</td>
+                                                            <td>5s 567ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="8d118a40e84996beb3dbeb6e57ec64a7b53ee18b9ed2f268bfb7d75621927dbe.html">kiểm tra nhập email với đầu chỉ chứa khoảng trắng</a></td>
+                                                            <td>13</td>
+                                                            <td>23:54:34</td>
+                                                            <td>5s 800ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="1ea9c2ff767e524741a2956fa7d16bc69a8ed79137dd86fcf9d779b19561c978.html">kiểm tra nhập số điện thoại > 10 ký tự</a></td>
+                                                            <td>13</td>
+                                                            <td>23:54:49</td>
+                                                            <td>5s 829ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="cee5a9f3e4702f4ae7a1e909c45b9197436a70ecae9513556a1de51a380fc426.html">kiểm tra nhập họ tên chỉ chứa khoảng trắng</a></td>
+                                                            <td>13</td>
+                                                            <td>23:55:04</td>
+                                                            <td>5s 648ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="cbb7a37053a65f67fdff250967b39ea4eb770a24b4848b0a0673c77ec3fb036d.html">kiểm tra nhập họ tên chứa chữ số</a></td>
+                                                            <td>13</td>
+                                                            <td>23:55:20</td>
+                                                            <td>3s 203ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="dc58b41f1b46da24a9352ef16be85d0de9b6fb66f6206d5565f8fa1f035ccfe6.html">kiểm tra bấm nút đăng xuất</a></td>
+                                                            <td>8</td>
+                                                            <td>23:55:36</td>
+                                                            <td>5s 834ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="0e084d587d0d5e338b3b1fd209c865424182bbd7ca6ce0d9e48195cd9aaa508a.html">kiểm tra nhập họ tên chứa ký tự đặc biệt</a></td>
+                                                            <td>13</td>
+                                                            <td>23:55:50</td>
+                                                            <td>5s 839ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="d75d5d731f860ff3b9bdef57cfd2eb3880b358ad9ab1ea2a2937bd151dedffdd.html">kiểm tra bỏ trống số địa chỉ email</a></td>
+                                                            <td>12</td>
+                                                            <td>23:56:06</td>
+                                                            <td>5s 605ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="b748cbcb0d1e1cc19c580eb6e7601697376cf692313fb4233960aa2295d94b95.html">kiểm tra bỏ trống số điện thoại</a></td>
+                                                            <td>12</td>
+                                                            <td>23:56:20</td>
+                                                            <td>7s 595ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="4008eeec4e58898a750e85e16bf3c12b43bc585ee7e31c138bb98daedc584b0e.html">kiểm tra nhập email > 255 ký tự</a></td>
+                                                            <td>13</td>
+                                                            <td>23:56:38</td>
+                                                            <td>5s 579ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="915a53f13695f62228305f721bcf435ed1b0b46c0550c9717abb2f1c6249d3f0.html">kiểm tra nhập số điện thoại chứa chữ cái</a></td>
+                                                            <td>13</td>
+                                                            <td>23:56:53</td>
+                                                            <td>6s 229ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="82deb97d1638f533760c0d756dfa9e75512ab5400b56a5d954e1390bbf386d40.html">kiểm tra nhập email với đuôi không phải @gmail.com</a></td>
+                                                            <td>13</td>
+                                                            <td>23:57:13</td>
+                                                            <td>5s 503ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="c4da869aa7c65284c192d901cab5542c280708940d01a405b64b65ca19bd7151.html">kiểm tra nhập số điện thoại < 10 ký tự</a></td>
+                                                            <td>13</td>
+                                                            <td>23:57:29</td>
+                                                            <td>3s 176ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="5717a5006ae147a8e35a040ccd44767cc0ce20d626c868956c1882f7bd555b18.html">kiểm tra nhập số điện thoại chỉ chứa khoảng trắng</a></td>
+                                                            <td>13</td>
+                                                            <td>23:57:43</td>
+                                                            <td>5s 630ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="99053e05a57cdc780431349f306232f9d0708a03a7d1e047db52ccecc29ed18f.html">kiểm tra nhập email chứa ký tự đặc biệt</a></td>
+                                                            <td>13</td>
+                                                            <td>23:57:58</td>
+                                                            <td>5s 833ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="scenario-result SUCCESS">
+                                                            <td>
+                                                                    <a href="1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html">UpdateInfoTest</a>
+                                                            </td>
+                                                            <td><a href="c254a466309b6fab9e4aa69501d5ee1fd79aa5d62bc5145cff47dbbb94742dbc.html">kiểm tra nhập số điện thoại chứa ký tự đặc biệt</a></td>
+                                                            <td>13</td>
+                                                            <td>23:58:14</td>
+                                                            <td>5s 591ms</td>
+                                                            <td><a href='##beforetable'><i class='bi bi-check-circle-fill success-icon ' title='SUCCESS'></i></a> <span style="display:none">SUCCESS</span>
+                                                            </td>
+                                                        </tr>
+                                                </tbody>
+                                            </table>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <h3><i class="bi bi-hand-index-thumb"></i> Manual Tests</h3>
+
+                                                No manual tests were recorded
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="container-fluid">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="beforefooter"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <span class="version">Serenity BDD version 4.0.19</span>
+        </div>
+    </div>
+</div>
+
+<!-- Chart data -->
+    <!-- PIE CHART -->
+    <script>
+
+        // The results pie chart
+        const outcomeChartCtx = document.getElementById('resultChart');
+
+        // Options define for display value on top of bars
+        const outcomeDetailsReports = [
+            { title: 'Passing Test Cases', link: "fdfef33b7136853e2adead58723bae5501d7fbb7019131f94f7db218bf6f1cbb.html" },
+            { title: 'Pending Test Cases', link: "e141cfb077d6e105ab2d59cc4e3e961459581a916c59e693704a1892649b78f8.html" },
+            { title: 'Ignored Test Cases', link: "c8ee769a6aa14e2e9316a3e20c6d686b9024c828ba9608b4d8ccb4388225448a.html" },
+            { title: 'Skipped Test Cases', link: "2b9bf4eb7f0572186a0741d1e5cbffbe5312d3567eac9590f38d7a7504142d46.html" },
+            { title: 'Aborted Test Cases',  link: "799fa49c51bc0143f3a035c88a5a1418062fc4988f42fa398b0cec643fef2aaa.html"},
+            { title: 'Failed Test Cases', link: "49c532f1ed2dbeea017f250e7dae2275478b4900757b9acbeb4c995b7262585f.html"  },
+            { title: 'Broken Test Cases', link: "77eabd9e9d1b63dba67d453c874eddd1e2989f7a2b7c0e01fb83fdc0310a6eae.html"    },
+            { title: 'Compromised Test Cases',  link: "319b1350fcb0ffd0f6e49ffc1e37e787e3990ee0449b0f2c563a80cdccdc57df.html" },
+        ]
+        const outcomeData = {
+            labels: ['Passing Test Cases', 'Pending Test Cases', 'Ignored Test Cases', 'Skipped Test Cases', 'Aborted Test Cases', 'Failed Test Cases', 'Broken Test Cases', 'Compromised Test Cases','Undefined Test Cases'],
+            datasets: [{
+                label: 'Test Results',
+                fill: false,
+                data: [{meta: 'Passing tests', value: 63}, {meta: 'Pending tests', value: 0}, {meta: 'Ignored tests', value: 0}, {meta: 'Skipped tests', value: 0}, {meta: 'Aborted tests', value: 0}, {meta: 'Failing tests', value: 0}, {meta: 'Broken tests', value: 0}, {meta: 'Compromised tests', value: 0}],
+                backgroundColor: ['rgba(153,204,51,0.5)','rgba(165, 199, 238, 0.5)','rgba(168, 168, 168, 0.5)','rgba(238, 224, 152, 0.75)','rgba(255, 153, 102, 0.5)','rgba(255, 22, 49, 0.5)','rgba(255, 97, 8, 0.5)','rgba(255, 104, 255, 0.5)','rgba(83, 50, 168, 0.5)'],
+                borderColor: ['rgba(153,204,51,1)','rgba(165, 199, 238, 1)','rgba(168, 168, 168, 1)','rgba(238, 224, 152, 1)','rgba(255, 153, 102, 1)','rgba(255, 22, 49, 1)','rgba(255, 97, 8, 1)','rgba(255, 104, 255, 1)','rgba(83, 50, 168, 1)'],
+                borderWidth: 1,
+            }]
+        }
+        const outcomeOptions = {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                },
+                // Change options for ALL labels of THIS CHART
+                datalabels: {
+                    color: '#444444',
+                    'font.weight': 'bold',
+                    formatter: (value, ctx) => {
+                        let sum = 0;
+                        let dataArr = ctx.chart.data.datasets[0].data;
+                        dataArr.map(data => {
+                            sum += data;
+                        });
+                        let percentage = (value * 100 / sum).toFixed(0) + "%";
+                        if (percentage === '0%' || percentage === 'NaN%') {
+                            return '';
+                        } else {
+                            return percentage;
+                        }
+                    },
+                },
+            }
+        }
+
+        const outcomeChart = new Chart(outcomeChartCtx, {
+            type: 'doughnut',
+            data: outcomeData,
+            options: outcomeOptions,
+            plugins: [
+                {
+                    id: 'text',
+                    beforeDraw: function (chart, a, b) {
+                        var width = chart.width,
+                            height = chart.height,
+                            ctx = chart.ctx;
+
+                        ctx.restore();
+                        var fontSize = (height / 200).toFixed(1);
+                        ctx.font = fontSize + "em sans-serif";
+                        ctx.textBaseline = "middle";
+
+                        var text = "100%"
+                        textX = 10 + Math.round((width - ctx.measureText(text).width) / 2);
+                        textY = (height / 2) - 40;
+
+                        ctx.fillText(text, textX, textY);
+                        ctx.save();
+                    }
+                }]
+        });
+
+        function clickHandler(click) {
+            const points = outcomeChart.getElementsAtEventForMode(click, 'nearest', {intersect: true}, true);
+            if (points.length) {
+                const firstPoint = points[0];
+                window.open(outcomeDetailsReports[firstPoint.index].link, "_self")
+
+            }
+        }
+        outcomeChartCtx.onclick = clickHandler;
+    </script>
+    <!-- END PIE CHART -->
+
+    <!-- SUMMARY BAR CHART -->
+    <script>
+
+        // The Severity bar chart
+        const severityChartCtx = document.getElementById('severityChart');
+
+        // Options define for display value on top of bars
+
+        const severityDetailsReports = [
+            { title: 'Passing Scenarios', link: "fdfef33b7136853e2adead58723bae5501d7fbb7019131f94f7db218bf6f1cbb.html" },
+            { title: 'Pending Scenarios', link: "e141cfb077d6e105ab2d59cc4e3e961459581a916c59e693704a1892649b78f8.html" },
+            { title: 'Ignored Scenarios', link: "c8ee769a6aa14e2e9316a3e20c6d686b9024c828ba9608b4d8ccb4388225448a.html" },
+            { title: 'Skipped Scenarios', link: "2b9bf4eb7f0572186a0741d1e5cbffbe5312d3567eac9590f38d7a7504142d46.html" },
+            { title: 'Aborted Scenarios',  link: "799fa49c51bc0143f3a035c88a5a1418062fc4988f42fa398b0cec643fef2aaa.html"},
+            { title: 'Failed Scenarios', link: "49c532f1ed2dbeea017f250e7dae2275478b4900757b9acbeb4c995b7262585f.html"  },
+            { title: 'Broken Scenarios', link: "77eabd9e9d1b63dba67d453c874eddd1e2989f7a2b7c0e01fb83fdc0310a6eae.html"    },
+            { title: 'Compromised Scenarios',  link: "319b1350fcb0ffd0f6e49ffc1e37e787e3990ee0449b0f2c563a80cdccdc57df.html" },
+        ]
+        const severityData = {
+            labels: ['Passing', 'Pending', 'Ignored', 'Skipped', 'Aborted', 'Failed', 'Broken', 'Compromised'],
+            datasets: [
+                {
+                    label: 'Automated',
+                    data: [63,0,0,0,0,0,0,0],
+                    backgroundColor: ['rgba(153,204,51,0.5)','rgba(165, 199, 238, 0.5)','rgba(168, 168, 168, 0.5)','rgba(238, 224, 152, 0.75)','rgba(255, 153, 102, 0.5)','rgba(255, 22, 49, 0.5)','rgba(255, 97, 8, 0.5)','rgba(255, 104, 255, 0.5)','rgba(83, 50, 168, 0.5)'],
+                    borderColor: ['rgba(153,204,51,1)','rgba(165, 199, 238, 1)','rgba(168, 168, 168, 1)','rgba(238, 224, 152, 1)','rgba(255, 153, 102, 1)','rgba(255, 22, 49, 1)','rgba(255, 97, 8, 1)','rgba(255, 104, 255, 1)','rgba(83, 50, 168, 1)'],
+                    borderWidth: 1
+                },
+                {
+                    label: 'Manual',
+                    data: [0,0,0,0,0,0,0,0],
+                    backgroundColor: ['rgba(153,204,51,0.25)','rgba(165, 199, 238, 0.25)','rgba(168, 168, 168, 0.25)','rgba(238, 224, 152, 0.375)','rgba(255, 153, 102, 0.25)','rgba(255, 22, 49, 0.25)','rgba(255, 97, 8, 0.25)','rgba(255, 104, 255, 0.25)','rgba(83, 50, 168, 0.25)'],
+                    borderColor: ['rgba(153,204,51,1)','rgba(165, 199, 238, 1)','rgba(168, 168, 168, 1)','rgba(238, 224, 152, 1)','rgba(255, 153, 102, 1)','rgba(255, 22, 49, 1)','rgba(255, 97, 8, 1)','rgba(255, 104, 255, 1)','rgba(83, 50, 168, 1)'],
+                    borderWidth: 1
+                },
+
+            ]
+        }
+        const severityOptions = {
+            responsive: true,
+            skipNull: true,
+            scales: {
+                x: {
+                    stacked: true,
+                },
+                y: {
+                    stacked: true,
+                }
+            },
+            plugins: {
+                // Change options for ALL labels of THIS CHART
+                datalabels: {
+                    color: '#444444',
+                    'font.weight': 'bold',
+                    formatter: (value, ctx) => {
+                        if (value === 0) {
+                            return '';
+                        } else {
+                            return value;
+                        }
+                    },
+                }
+            }
+        }
+        const severityChart = new Chart(severityChartCtx, {
+            type: 'bar',
+            data: severityData,
+            options: severityOptions
+        });
+
+        function clickHandler(click) {
+            const points = severityChart.getElementsAtEventForMode(click, 'nearest', {intersect: true}, true);
+            if (points.length) {
+                const firstPoint = points[0];
+                window.open(severityDetailsReports[firstPoint.index].link, "_self")
+
+            }
+        }
+        severityChartCtx.onclick = clickHandler;
+    </script>
+    <!-- END SUMMARY CHART -->
+
+    <!-- DURATION CHART -->
+    <script>
+
+        // Options define for display value on top of bars
+        const durationDetailsReports = [
+                {title: "Under 1 second", link: "0e32ed3c240bd74f6e6ed2c3ef94ef7a8a80262d5e8973792b61a8d4d91f14c8.html"},
+                {title: "1 to 10 seconds", link: "500c5c308f5ea624e7b5e8ca1a5eb75578005309502032a588af157d547fdec9.html"},
+                {title: "10 to 30 seconds", link: "880bb4d3a6f21ade620cef4fcce1a040ce5213b6524653d652f0f0aa68cda5fa.html"},
+                {title: "30 to 60 seconds", link: "82f3e40100f4c073a2f925a5faecf4a91aa4d5fc288d26b1378b85ecc3d70dcb.html"},
+                {title: "1 to 2 minutes", link: "af505cf77ea016aa38b2f4c19082a481ad2f401600b53d5cd811c8328734481e.html"},
+                {title: "2 to 5 minutes", link: "f8f8d84a60edb07138ba0beb77b0c7147f46b47191b27d1050f6155abb541dfe.html"},
+                {title: "5 to 10 minutes", link: "11fe94077dbb9d976655c2acd82b47b48c96e169280332d6f212f3a4c0bf1cb0.html"},
+                {title: "10 minutes or over", link: "231f1d0189125400bf7d64e957ae8844613397dc38b6b6ee8bba1d2710b82969.html"},
+        ]
+        // The Severity bar chart
+        const durationChartCtx = document.getElementById('durationChart');
+
+        // Options define for display value on top of bars
+
+        const durationData = {
+            labels: ['Under 1 second','1 to 10 seconds','10 to 30 seconds','30 to 60 seconds','1 to 2 minutes','2 to 5 minutes','5 to 10 minutes','10 minutes or over'],
+            datasets: [{
+                label: 'Number of tests per duration',
+                fill: false,
+                data: ['0','63','0','0','0','0','0','0'],
+                backgroundColor: 'rgba(83, 146, 255,0.5)',
+                borderColor: 'rgba(83, 146, 255, 1)',
+            }]
+        }
+        const durationOptions = {
+            responsive: true,
+            plugins: {
+                // Change options for ALL labels of THIS CHART
+                datalabels: {
+                    color: '#444444',
+                    'font.weight': 'bold',
+                    formatter: (value, ctx) => {
+                        if (value > 0) {
+                            return value;
+                        } else {
+                            return '';
+                        }
+                    },
+                },
+                tooltip: {
+                    enabled: true,
+                    usePointStyle: true,
+                    callbacks: {
+                        label: (data) => {
+                            return data.parsed.y + ' tests'
+                        }
+                    },
+                },
+            },
+        }
+
+        const durationChart = new Chart(durationChartCtx, {
+            type: 'bar',
+            data: durationData,
+            options: durationOptions
+        });
+
+        function durationClickHandler(click) {
+            const points = durationChart.getElementsAtEventForMode(click, 'nearest', {intersect: true}, true);
+            if (points.length) {
+                const firstPoint = points[0];
+                window.open(durationDetailsReports[firstPoint.index].link, "_self")
+
+            }
+        }
+
+        durationChartCtx.onclick = durationClickHandler;
+    </script>
+    <!-- END DURATION CHART -->
+
+
+
+    <!-- COVERAGE BAR CHART -->
+    <script>
+
+        // The coverage bar chart
+        const coverageChartCtx = document.getElementById('coverageChart');
+
+        // Options define for display value on top of bars
+
+        const coverageReports = [
+            {
+                title: 'Api',
+                result: 'SUCCESS',
+                link: "22cbb4a362c7cf8d5835a8234cb776dc188bbc2efb66f5a77d7a638079f9c5fd.html"
+            },
+            {
+                title: 'Api test',
+                result: 'SUCCESS',
+                link: "63ca2ade8752b5f05864e25ae81a2c7a3f6adb9aadff7e7db6febc0db1b5246e.html"
+            },
+            {
+                title: 'Web',
+                result: 'SUCCESS',
+                link: "09f731f5460ab6c0020d87f3947a2ec1d6d78a3855b408c55746f567f4da2415.html"
+            },
+            {
+                title: 'Login test',
+                result: 'SUCCESS',
+                link: "638debdcad9b2d6f8786e08c886b952842c0a8d3741845708dfa034821c80203.html"
+            },
+            {
+                title: 'Register test',
+                result: 'SUCCESS',
+                link: "2be8bddd3b32edd95b7fb9fa3113bd5b5697065ca5fdf7b631fc4f18c64d0118.html"
+            },
+            {
+                title: 'Show info test',
+                result: 'SUCCESS',
+                link: "8bf45a15f44e95f552803b72f8cd5fab90c7b7fd47c8252cdebe2149638954cb.html"
+            },
+            {
+                title: 'Update info test',
+                result: 'SUCCESS',
+                link: "1ab1a80b45d0649bb3c0dc4d223e7df7a2734841728f552f2415c94132425d73.html"
+            },
+        ]
+        const coverageData = {
+            labels: [
+                'Api',
+                'Api test',
+                'Web',
+                'Login test',
+                'Register test',
+                'Show info test',
+                'Update info test',
+            ],
+            datasets: [
+                {
+                    label: ['Passing Tests'],
+                    data: [1,1,62,7,32,3,20],
+                    backgroundColor: [ 'rgba(153,204,51,0.5)' ]
+                },
+                {
+                    label: ['Pending Tests'],
+                    data: [0,0,0,0,0,0,0],
+                    backgroundColor: [ 'rgba(165, 199, 238, 0.5)' ]
+                },
+                {
+                    label: ['Ignored Tests'],
+                    data: [0,0,0,0,0,0,0],
+                    backgroundColor: [ 'rgba(168, 168, 168, 0.5)' ]
+                },
+                {
+                    label: ['Skipped Tests'],
+                    data: [0,0,0,0,0,0,0],
+                    backgroundColor: [ 'rgba(238, 224, 152, 0.75)' ]
+                },
+                {
+                    label: ['Aborted Tests'],
+                    data: [0,0,0,0,0,0,0],
+                    backgroundColor: [ 'rgba(255, 153, 102, 0.5)' ]
+                },
+                {
+                    label: ['Failed Tests'],
+                    data: [0,0,0,0,0,0,0],
+                    backgroundColor: [ 'rgba(255, 22, 49, 0.5)' ]
+                },
+                {
+                    label: ['Errors'],
+                    data: [0,0,0,0,0,0,0],
+                    backgroundColor: [ 'rgba(255, 97, 8, 0.5)' ]
+                },
+                {
+                    label: ['Compromised Tests'],
+                    data: [0,0,0,0,0,0,0],
+                    backgroundColor: [ 'rgba(255, 104, 255, 0.5)' ]
+                },
+            ]
+        }
+        const coverageOptions = {
+            responsive: true,
+            indexAxis: 'y',
+            // barPercentage: ,
+            barThickness: 'flex',
+            maxBarThickness: 30,
+            minBarLength: 2,
+            skipNull: true,
+            scales: {
+                x: {
+                    stacked: true,
+                },
+                y: {
+                    stacked: true,
+                }
+            },
+            plugins: {
+                // Change options for ALL labels of THIS CHART
+                datalabels: {
+                    color: '#444444',
+                    'font.weight': 'bold'
+                },
+                tooltip: {
+                    enabled: true,
+                    usePointStyle: true,
+                },
+            },
+        }
+
+        const coverageChart = new Chart(coverageChartCtx, {
+            type: 'bar',
+            data: coverageData,
+            options: coverageOptions
+        });
+
+        function coverageClickHandler(click) {
+            const points = coverageChart.getElementsAtEventForMode(click, 'nearest', {intersect: true}, true);
+            if (points.length) {
+                const firstPoint = points[0];
+                if (coverageReports[firstPoint.index].link) {
+                    window.open(coverageReports[firstPoint.index].link, "_self")
+                }
+            }
+        }
+
+        coverageChartCtx.onclick = coverageClickHandler;
+    </script>
+    <!-- END COVERAGE CHART -->
+
+</body>
+</html>

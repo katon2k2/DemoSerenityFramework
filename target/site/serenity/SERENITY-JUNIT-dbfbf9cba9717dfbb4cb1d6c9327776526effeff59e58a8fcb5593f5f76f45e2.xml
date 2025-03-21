@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><testsuite errors="0" failures="0" name="Test.Web.RegisterTest" skipped="0" tests="1" time="6.0" timestamp="2025-03-20 11:30:40"><testcase classname="Test.Web.RegisterTest" name="kiểm tra nhập mật khẩu &lt; 6 ký tự"/></testsuite>

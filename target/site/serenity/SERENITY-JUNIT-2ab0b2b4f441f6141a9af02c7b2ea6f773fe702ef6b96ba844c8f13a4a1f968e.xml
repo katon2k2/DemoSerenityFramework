@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><testsuite errors="0" failures="0" name="Test.Web.RegisterTest" skipped="0" tests="1" time="6.01" timestamp="2025-03-21 11:51:38"><testcase classname="Test.Web.RegisterTest" name="kiểm tra nhập số điện thoại &lt; 10 ký tự"/></testsuite>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><testsuite errors="0" failures="0" name="Test.Web.RegisterTest" skipped="0" tests="1" time="1.21" timestamp="2025-03-25 04:37:44"><testcase classname="Test.Web.RegisterTest" name="kiểm tra nhập số điện thoại &lt; 10 ký tự"/></testsuite>

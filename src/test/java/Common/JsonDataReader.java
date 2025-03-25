@@ -5,11 +5,19 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 public class JsonDataReader {
-    public static Data getTestData() throws IOException {
+    public static DataWeb getTestDataWeb(String filePath) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(
-                Paths.get("src/test/resources/Data.json").toFile(),
-                Data.class
+                Paths.get(filePath).toFile(),
+                DataWeb.class
+        );
+    }
+
+    public static DataApi getTestDataApi(String filePath) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(
+                Paths.get(filePath).toFile(),
+                DataApi.class
         );
     }
 }

@@ -3,7 +3,7 @@ package Test.Web;
 import Action.LoginStep;
 import Action.RegisterStep;
 import Action.ShowInfoStep;
-import Common.Data;
+import Common.DataWeb;
 import Common.InvalidData;
 import Common.JsonDataReader;
 import Common.LoginData;
@@ -17,14 +17,10 @@ import java.io.IOException;
 @ExtendWith(SerenityJUnit5Extension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class LoginTest {
-    private static Data data;
-    private static LoginData loginData;
-    private static InvalidData invalidData;
+    private static DataWeb data;
 
     public LoginTest() throws IOException {
-        data = JsonDataReader.getTestData();
-        loginData = data.getLoginData();
-        invalidData = data.getInvalidData();
+        data = JsonDataReader.getTestDataWeb("src/test/resources/DataWeb.json");
     }
 
     @Steps
@@ -50,8 +46,8 @@ public class LoginTest {
     public void checkLoginSuccess(){
         loginStep.openLoginPage();
         loginStep.clearInput();
-        loginStep.inputAccount(loginData.getInputUserAccount());
-        loginStep.inputPassword(loginData.getInputUserPassword());
+        loginStep.inputAccount(data.loginData.InputUserAccount);
+        loginStep.inputPassword(data.loginData.InputUserPassword);
         loginStep.clickButtonLogin();
         assertThat(showInfoStep.isTitleVisible()).isTrue();
     }
@@ -61,7 +57,7 @@ public class LoginTest {
     public void checkEmptyInputAccount(){
         loginStep.openLoginPage();
         loginStep.clearInput();
-        loginStep.inputPassword(loginData.getInputUserPassword());
+        loginStep.inputPassword(data.loginData.InputUserPassword);
         loginStep.clickButtonLogin();
         assertThat(loginStep.isNotiEmptyInputVisible()).isTrue();
     }
@@ -71,7 +67,7 @@ public class LoginTest {
     public void checkEmptyInputPassword(){
         loginStep.openLoginPage();
         loginStep.clearInput();
-        loginStep.inputAccount(loginData.getInputUserAccount());
+        loginStep.inputAccount(data.loginData.InputUserAccount);
         loginStep.clickButtonLogin();
         assertThat(loginStep.isNotiEmptyInputVisible()).isTrue();
     }
@@ -81,8 +77,8 @@ public class LoginTest {
     public void checkWrongInputAccount(){
         loginStep.openLoginPage();
         loginStep.clearInput();
-        loginStep.inputAccount(invalidData.getInputUserAccountWrong());
-        loginStep.inputPassword(loginData.getInputUserPassword());
+        loginStep.inputAccount(data.invalidData.inputUserAccountWrong);
+        loginStep.inputPassword(data.loginData.InputUserPassword);
         loginStep.clickButtonLogin();
         assertThat(loginStep.isNotiWrongAccountVisible()).isTrue();
     }
@@ -92,8 +88,8 @@ public class LoginTest {
     public void checkWrongInputPassword(){
         loginStep.openLoginPage();
         loginStep.clearInput();
-        loginStep.inputAccount(loginData.getInputUserAccount());
-        loginStep.inputPassword(invalidData.getInputUserPasswordWrong());
+        loginStep.inputAccount(data.loginData.InputUserAccount);
+        loginStep.inputPassword(data.invalidData.inputUserPasswordWrong);
         loginStep.clickButtonLogin();
         assertThat(loginStep.isNotiWrongAccountVisible()).isTrue();
     }

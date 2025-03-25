@@ -1,0 +1,24 @@
+{
+  "mySqlData": {
+    "Url": "jdbc:mysql://localhost:3306/demoapp",
+    "Account": "root",
+    "Password": ""
+  },
+  "loginData": {
+    "InputUserAccount": "AAAAAA",
+    "InputUserPassword": "123456"
+  },
+  "registerData": {
+    "InputUserName": "Nguyen Van A",
+    "InputUserPhone": "0986889332",
+    "InputUserEmail": "anv@gmail.com",
+    "InputUserAccount": "AAAAAA",
+    "InputUserPassword": "123456",
+    "InputUserConfirmPassword": "123456"
+  },
+  "updateData": {
+    "InputUserName": "Nguyen Van BBB",
+    "InputUserPhone": "0986222555",
+    "InputUserEmail": "bnv@gmail.com"
+  }
+}

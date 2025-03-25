@@ -4,27 +4,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RegisterData {
     @JsonProperty("InputUserName")
-    private String InputUserName;
+    public String InputUserName;
 
     @JsonProperty("InputUserPhone")
-    private String InputUserPhone;
+    public String InputUserPhone;
 
     @JsonProperty("InputUserEmail")
-    private String InputUserEmail;
+    public String InputUserEmail;
 
     @JsonProperty("InputUserAccount")
-    private String InputUserAccount;
+    public String InputUserAccount;
 
     @JsonProperty("InputUserPassword")
-    private String InputUserPassword;
+    public String InputUserPassword;
 
     @JsonProperty("InputUserConfirmPassword")
-    private String InputUserConfirmPassword;
-
-    public String getInputUserName() { return InputUserName; }
-    public String getInputUserPhone() { return InputUserPhone; }
-    public String getInputUserEmail() { return InputUserEmail; }
-    public String getInputUserAccount() { return InputUserAccount; }
-    public String getInputUserPassword() { return InputUserPassword; }
-    public String getInputUserConfirmPassword() { return InputUserConfirmPassword; }
+    public String InputUserConfirmPassword;
 }

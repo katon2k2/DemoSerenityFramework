@@ -4,7 +4,7 @@ import net.serenitybdd.annotations.DefaultUrl;
 import net.serenitybdd.core.pages.PageObject;
 import org.openqa.selenium.By;
 
-@DefaultUrl("http://demoframework.free.nf/register")
+@DefaultUrl("http://127.0.0.1:8000/register")
 public class RegisterPage extends PageObject{
     public static final By Title = By.xpath("//h1[contains(text(),'Đăng Ký')]");
     public static final By InputUserName = By.xpath("//input[@id='InputUserName']");

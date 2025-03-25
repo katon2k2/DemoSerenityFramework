@@ -9,20 +9,20 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.assertj.core.api.Assertions.*;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @ExtendWith(SerenityJUnit5Extension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class RegisterTest {
-    private static Data data;
-    private static RegisterData registerData;
-    private static InvalidData invalidData;
+    private static DataWeb data;
 
     public RegisterTest() throws IOException {
-        data = JsonDataReader.getTestData();
-        registerData = data.getRegisterData();
-        invalidData = data.getInvalidData();
+        data = JsonDataReader.getTestDataWeb("src/test/resources/DataWeb.json");
     }
 
     @Steps
@@ -42,18 +42,23 @@ public class RegisterTest {
     @Test
     @Order(2)
     @DisplayName("kiểm tra đăng ký thành công")
-    public void checkRegisterSuccess(){
+    public void checkRegisterSuccess() throws SQLException {
         String account = "A" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
         registerStep.inputUserAccount(account);
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
-        assertThat(loginStep.isNotiRegisterSuccessVisible()).isTrue();
+        if(loginStep.isNotiRegisterSuccessVisible()){
+            MySqlConnection.connection = MySqlConnection.getConnection(data.mySqlData.Url, data.mySqlData.Account, data.mySqlData.Password);
+            MySqlConnection.statement = MySqlConnection.connection.createStatement();
+            assertThat(MySqlConnection.getResultQuery("SELECT id FROM users WHERE name LIKE '" +data.registerData.InputUserName+ "' AND phone LIKE '"+data.registerData.InputUserPhone+"' AND email LIKE '"+data.registerData.InputUserEmail+"' AND account LIKE '"+account+"'").next()).isTrue();
+            MySqlConnection.closeConnection();
+        }
     }
 
     @Test
@@ -61,11 +66,11 @@ public class RegisterTest {
     public void checkEmptyInputUserName(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserNameVisible()).isTrue();
     }
@@ -75,11 +80,11 @@ public class RegisterTest {
     public void checkEmptyInputUserPhone(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserPhoneVisible()).isTrue();
     }
@@ -89,11 +94,11 @@ public class RegisterTest {
     public void checkEmptyInputUserEmail(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserEmailVisible()).isTrue();
     }
@@ -103,11 +108,11 @@ public class RegisterTest {
     public void checkEmptyInputUserAccount(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidAccountVisible()).isTrue();
     }
@@ -117,11 +122,11 @@ public class RegisterTest {
     public void checkEmptyInputUserPassword(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidPasswordVisible()).isTrue();
     }
@@ -131,11 +136,11 @@ public class RegisterTest {
     public void checkEmptyInputUserConfirmPassword(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidConfirmPasswordVisible()).isTrue();
     }
@@ -145,12 +150,12 @@ public class RegisterTest {
     public void checkInputUserNameOverLength(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(invalidData.getInputUserNameOverLength());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.invalidData.inputUserNameOverLength);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserNameVisible()).isTrue();
     }
@@ -160,12 +165,12 @@ public class RegisterTest {
     public void checkInputUserNameWithNumber(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(invalidData.getInputUserNameWithNumber());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.invalidData.inputUserNameWithNumber);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserNameVisible()).isTrue();
     }
@@ -175,12 +180,12 @@ public class RegisterTest {
     public void checkInputUserNameWithSpecialCharacters(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(invalidData.getInputUserNameWithSpecialCharacters());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.invalidData.inputUserNameWithSpecialCharacters);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserNameVisible()).isTrue();
     }
@@ -190,12 +195,12 @@ public class RegisterTest {
     public void checkInputUserNameOnlySpace(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(invalidData.getInputUserNameOnlySpace());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.invalidData.inputUserNameOnlySpace);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserNameVisible()).isTrue();
     }
@@ -205,12 +210,12 @@ public class RegisterTest {
     public void checkInputUserPhoneOverLength(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(invalidData.getInputUserPhoneOverLength());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.invalidData.inputUserPhoneOverLength);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserPhoneVisible()).isTrue();
     }
@@ -220,12 +225,12 @@ public class RegisterTest {
     public void checkInputUserPhoneTooShort(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(invalidData.getInputUserPhoneTooShort());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.invalidData.inputUserPhoneTooShort);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserPhoneVisible()).isTrue();
     }
@@ -235,12 +240,12 @@ public class RegisterTest {
     public void checkInputUserPhoneWithAlphabet(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(invalidData.getInputUserPhoneWithAlphabet());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.invalidData.inputUserPhoneWithAlphabet);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserPhoneVisible()).isTrue();
     }
@@ -250,12 +255,12 @@ public class RegisterTest {
     public void checkInputUserPhoneWithSpecialCharacters(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(invalidData.getInputUserPhoneWithSpecialCharacters());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.invalidData.inputUserPhoneWithSpecialCharacters);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserPhoneVisible()).isTrue();
     }
@@ -265,12 +270,12 @@ public class RegisterTest {
     public void checkInputUserPhoneOnlySpace(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(invalidData.getInputUserPhoneOnlySpace());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.invalidData.inputUserPhoneOnlySpace);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserPhoneVisible()).isTrue();
     }
@@ -280,12 +285,12 @@ public class RegisterTest {
     public void checkInputUserEmailOverLength(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(invalidData.getInputUserEmailOverLength());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.invalidData.inputUserEmailOverLength);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserEmailVisible()).isTrue();
     }
@@ -295,12 +300,12 @@ public class RegisterTest {
     public void checkInputUserEmailWithSpecialCharacters(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(invalidData.getInputUserEmailWithSpecialCharacters());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.invalidData.inputUserEmailWithSpecialCharacters);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserEmailVisible()).isTrue();
     }
@@ -310,12 +315,12 @@ public class RegisterTest {
     public void checkInputUserEmailIncorrectExtension(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(invalidData.getInputUserEmailIncorrectExtension());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.invalidData.inputUserEmailIncorrectExtension);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserEmailVisible()).isTrue();
     }
@@ -325,12 +330,12 @@ public class RegisterTest {
     public void checkInputUserEmailHeaderIsSpace(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(invalidData.getInputUserEmailHeaderIsSpace());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.invalidData.inputUserEmailHeaderIsSpace);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidUserEmailVisible()).isTrue();
     }
@@ -340,12 +345,12 @@ public class RegisterTest {
     public void checkInputUserAccountExists(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(invalidData.getInputUserAccountExists());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.invalidData.inputUserAccountExists);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiAccountExistsVisible()).isTrue();
     }
@@ -355,12 +360,12 @@ public class RegisterTest {
     public void checkInputUserAccountOverLength(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(invalidData.getInputUserAccountOverLength());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.invalidData.inputUserAccountOverLength);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidAccountVisible()).isTrue();
     }
@@ -370,12 +375,12 @@ public class RegisterTest {
     public void checkInputUserAccountTooShort(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(invalidData.getInputUserAccountTooShort());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.invalidData.inputUserAccountTooShort);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidAccountVisible()).isTrue();
     }
@@ -385,12 +390,12 @@ public class RegisterTest {
     public void checkInputUserAccountStartWithNumber(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(invalidData.getInputUserAccountStartWithNumber());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.invalidData.inputUserAccountStartWithNumber);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidAccountVisible()).isTrue();
     }
@@ -400,12 +405,12 @@ public class RegisterTest {
     public void checkInputUserAccountWithSpecialCharacters(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(invalidData.getInputUserAccountWithSpecialCharacters());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.invalidData.inputUserAccountWithSpecialCharacters);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidAccountVisible()).isTrue();
     }
@@ -415,12 +420,12 @@ public class RegisterTest {
     public void checkInputUserAccountOnlySpace(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(invalidData.getInputUserAccountOnlySpace());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.invalidData.inputUserAccountOnlySpace);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidAccountVisible()).isTrue();
     }
@@ -430,12 +435,12 @@ public class RegisterTest {
     public void checkInputUserPasswordOverLength(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(invalidData.getInputUserPasswordOverLength());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.invalidData.inputUserPasswordOverLength);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidPasswordVisible()).isTrue();
     }
@@ -445,12 +450,12 @@ public class RegisterTest {
     public void checkInputUserPasswordTooShort(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(invalidData.getInputUserPasswordTooShort());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.invalidData.inputUserPasswordTooShort);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidPasswordVisible()).isTrue();
     }
@@ -460,12 +465,12 @@ public class RegisterTest {
     public void checkInputUserPasswordOnlySpace(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(invalidData.getInputUserPasswordOnlySpace());
-        registerStep.inputUserConfirmPassword(registerData.getInputUserConfirmPassword());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.invalidData.inputUserPasswordOnlySpace);
+        registerStep.inputUserConfirmPassword(data.registerData.InputUserConfirmPassword);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidPasswordVisible()).isTrue();
     }
@@ -475,12 +480,12 @@ public class RegisterTest {
     public void checkInputUserPasswordWrong(){
         registerStep.openRegisterPage();
         registerStep.clearInput();
-        registerStep.inputUserName(registerData.getInputUserName());
-        registerStep.inputUserPhone(registerData.getInputUserPhone());
-        registerStep.inputUserEmail(registerData.getInputUserEmail());
-        registerStep.inputUserAccount(registerData.getInputUserAccount());
-        registerStep.inputUserPassword(registerData.getInputUserPassword());
-        registerStep.inputUserConfirmPassword(invalidData.getInputUserPasswordWrong());
+        registerStep.inputUserName(data.registerData.InputUserName);
+        registerStep.inputUserPhone(data.registerData.InputUserPhone);
+        registerStep.inputUserEmail(data.registerData.InputUserEmail);
+        registerStep.inputUserAccount(data.registerData.InputUserAccount);
+        registerStep.inputUserPassword(data.registerData.InputUserPassword);
+        registerStep.inputUserConfirmPassword(data.invalidData.inputUserPasswordWrong);
         registerStep.clickButtonRegister();
         assertThat(registerStep.isNotiInvalidConfirmPasswordVisible()).isTrue();
     }

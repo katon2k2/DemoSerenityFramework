@@ -2,7 +2,7 @@ package Test.Web;
 
 import Action.LoginStep;
 import Action.ShowInfoStep;
-import Common.Data;
+import Common.DataWeb;
 import Common.InvalidData;
 import Common.JsonDataReader;
 import Common.LoginData;
@@ -19,14 +19,10 @@ import java.io.IOException;
 
 @ExtendWith(SerenityJUnit5Extension.class)
 public class ShowInfoTest {
-    private static Data data;
-    private static LoginData loginData;
-    private static InvalidData invalidData;
+    private static DataWeb data;
 
     public ShowInfoTest() throws IOException {
-        data = JsonDataReader.getTestData();
-        loginData = data.getLoginData();
-        invalidData = data.getInvalidData();
+        data = JsonDataReader.getTestDataWeb("src/test/resources/DataWeb.json");
     }
 
     @Steps
@@ -40,8 +36,8 @@ public class ShowInfoTest {
     public void checkLoginSuccess(){
         loginStep.openLoginPage();
         loginStep.clearInput();
-        loginStep.inputAccount(loginData.getInputUserAccount());
-        loginStep.inputPassword(loginData.getInputUserPassword());
+        loginStep.inputAccount(data.loginData.InputUserAccount);
+        loginStep.inputPassword(data.loginData.InputUserPassword);
         loginStep.clickButtonLogin();
     }
 

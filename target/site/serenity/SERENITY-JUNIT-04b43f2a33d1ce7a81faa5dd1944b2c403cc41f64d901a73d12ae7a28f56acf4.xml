@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><testsuite errors="0" failures="0" name="Test.Web.RegisterTest" skipped="0" tests="1" time="7.36" timestamp="2025-03-21 11:51:59"><testcase classname="Test.Web.RegisterTest" name="kiểm tra nhập email chứa ký tự đặc biệt"/></testsuite>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><testsuite errors="0" failures="0" name="Test.Web.RegisterTest" skipped="0" tests="1" time="1.18" timestamp="2025-03-25 04:37:58"><testcase classname="Test.Web.RegisterTest" name="kiểm tra nhập email chứa ký tự đặc biệt"/></testsuite>

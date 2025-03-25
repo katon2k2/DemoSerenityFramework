@@ -1,0 +1,50 @@
+{
+  "mySqlData": {
+    "Url": "jdbc:mysql://localhost:3306/demoapp",
+    "Account": "root",
+    "Password": ""
+  },
+  "loginData": {
+    "InputUserAccount": "YYYYYY",
+    "InputUserPassword": "123456"
+  },
+  "registerData": {
+    "InputUserName": "Nguyen Van A",
+    "InputUserPhone": "0986889332",
+    "InputUserEmail": "anv@gmail.com",
+    "InputUserAccount": "YYYYYY",
+    "InputUserPassword": "123456",
+    "InputUserConfirmPassword": "123456"
+  },
+  "updateData": {
+    "InputUserName": "Nguyen Van ZZZZZZZZZ",
+    "InputUserPhone": "0986222555",
+    "InputUserEmail": "bnv@gmail.com"
+  },
+  "invalidData": {
+    "InputUserAccountWrong": "OKXABC",
+    "InputUserAccountExists": "ZZZZZZ",
+    "InputUserAccountOverLength": "ASDVNBAHJSGJAHGSJHGASJHSGAJDBABDAGJ",
+    "InputUserAccountTooShort": "ASDFG",
+    "InputUserAccountStartWithNumber": "2ASDFG",
+    "InputUserAccountWithSpecialCharacters": "#SDFGH",
+    "InputUserAccountOnlySpace": "      ",
+    "InputUserPasswordWrong": "5688767967745",
+    "InputUserPasswordOverLength": "ASDVNBAHJSGJAHGSJHGASJHSGAJDBABDAGJ",
+    "InputUserPasswordTooShort": "12345",
+    "InputUserPasswordOnlySpace": "      ",
+    "InputUserNameOverLength": "asdlkajsdlkjlsakjdklasjdkasjdlkasjdlsldkajsldkjaskasjd",
+    "InputUserNameWithNumber": "Nguy2n Th1 Ly",
+    "InputUserNameWithSpecialCharacters": "Nguyen V@n H!eu",
+    "InputUserNameOnlySpace": "      ",
+    "InputUserPhoneOverLength": "09876957125",
+    "InputUserPhoneTooShort": "098769571",
+    "InputUserPhoneWithAlphabet": "0123D45F69",
+    "InputUserPhoneWithSpecialCharacters": "012@52#523",
+    "InputUserPhoneOnlySpace": "          ",
+    "InputUserEmailOverLength": "lasjdlkashfkalsjflaksjkdljaslkdjaksfhjkdhfkdjsfheifskdnfksdljflkasjlfkjaslkdaskdjaskdasflsjdklgjskldg234124o3h5o3i464o5i6j47kj67h5k7jh567j56hj7kjjalksfjalskfhi3o242oi5h2l4kj3lk46j3lk56jk457jlk474lk67j4l6k7jlkasdjlaskdjlaksdjadasdlknnlkelvksdjflkajslkd134132kl35j24lk5j@gmail.com",
+    "InputUserEmailWithSpecialCharacters": "asd#$@gmail.com",
+    "InputUserEmailIncorrectExtension": "abc@xyz.123",
+    "InputUserEmailHeaderIsSpace": "      @gmail.com"
+  }
+}

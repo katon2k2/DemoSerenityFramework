@@ -4,171 +4,74 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class InvalidData {
     @JsonProperty("InputUserAccountWrong")
-    private String inputUserAccountWrong;
+    public String inputUserAccountWrong;
 
     @JsonProperty("InputUserAccountExists")
-    private String inputUserAccountExists;
+    public String inputUserAccountExists;
 
     @JsonProperty("InputUserAccountOverLength")
-    private String inputUserAccountOverLength;
+    public String inputUserAccountOverLength;
 
     @JsonProperty("InputUserAccountTooShort")
-    private String inputUserAccountTooShort;
+    public String inputUserAccountTooShort;
 
     @JsonProperty("InputUserAccountStartWithNumber")
-    private String inputUserAccountStartWithNumber;
+    public String inputUserAccountStartWithNumber;
 
     @JsonProperty("InputUserAccountWithSpecialCharacters")
-    private String inputUserAccountWithSpecialCharacters;
+    public String inputUserAccountWithSpecialCharacters;
 
     @JsonProperty("InputUserAccountOnlySpace")
-    private String inputUserAccountOnlySpace;
+    public String inputUserAccountOnlySpace;
 
     @JsonProperty("InputUserPasswordWrong")
-    private String inputUserPasswordWrong;
+    public String inputUserPasswordWrong;
 
     @JsonProperty("InputUserPasswordOverLength")
-    private String inputUserPasswordOverLength;
+    public String inputUserPasswordOverLength;
 
     @JsonProperty("InputUserPasswordTooShort")
-    private String inputUserPasswordTooShort;
+    public String inputUserPasswordTooShort;
 
     @JsonProperty("InputUserPasswordOnlySpace")
-    private String inputUserPasswordOnlySpace;
+    public String inputUserPasswordOnlySpace;
 
     @JsonProperty("InputUserNameOverLength")
-    private String inputUserNameOverLength;
+    public String inputUserNameOverLength;
 
     @JsonProperty("InputUserNameWithNumber")
-    private String inputUserNameWithNumber;
+    public String inputUserNameWithNumber;
 
     @JsonProperty("InputUserNameWithSpecialCharacters")
-    private String inputUserNameWithSpecialCharacters;
+    public String inputUserNameWithSpecialCharacters;
 
     @JsonProperty("InputUserNameOnlySpace")
-    private String inputUserNameOnlySpace;
+    public String inputUserNameOnlySpace;
 
     @JsonProperty("InputUserPhoneOverLength")
-    private String inputUserPhoneOverLength;
+    public String inputUserPhoneOverLength;
 
     @JsonProperty("InputUserPhoneTooShort")
-    private String inputUserPhoneTooShort;
+    public String inputUserPhoneTooShort;
 
     @JsonProperty("InputUserPhoneWithAlphabet")
-    private String inputUserPhoneWithAlphabet;
+    public String inputUserPhoneWithAlphabet;
 
     @JsonProperty("InputUserPhoneWithSpecialCharacters")
-    private String inputUserPhoneWithSpecialCharacters;
+    public String inputUserPhoneWithSpecialCharacters;
 
     @JsonProperty("InputUserPhoneOnlySpace")
-    private String inputUserPhoneOnlySpace;
+    public String inputUserPhoneOnlySpace;
 
     @JsonProperty("InputUserEmailOverLength")
-    private String inputUserEmailOverLength;
+    public String inputUserEmailOverLength;
 
     @JsonProperty("InputUserEmailWithSpecialCharacters")
-    private String inputUserEmailWithSpecialCharacters;
+    public String inputUserEmailWithSpecialCharacters;
 
     @JsonProperty("InputUserEmailIncorrectExtension")
-    private String inputUserEmailIncorrectExtension;
+    public String inputUserEmailIncorrectExtension;
 
     @JsonProperty("InputUserEmailHeaderIsSpace")
-    private String inputUserEmailHeaderIsSpace;
-
-    // Getter methods
-    public String getInputUserAccountWrong() {
-        return inputUserAccountWrong;
-    }
-
-    public String getInputUserAccountExists() {
-        return inputUserAccountExists;
-    }
-
-    public String getInputUserAccountOverLength() {
-        return inputUserAccountOverLength;
-    }
-
-    public String getInputUserAccountTooShort() {
-        return inputUserAccountTooShort;
-    }
-
-    public String getInputUserAccountStartWithNumber() {
-        return inputUserAccountStartWithNumber;
-    }
-
-    public String getInputUserAccountWithSpecialCharacters() {
-        return inputUserAccountWithSpecialCharacters;
-    }
-
-    public String getInputUserAccountOnlySpace() {
-        return inputUserAccountOnlySpace;
-    }
-
-    public String getInputUserPasswordWrong() {
-        return inputUserPasswordWrong;
-    }
-
-    public String getInputUserPasswordOverLength() {
-        return inputUserPasswordOverLength;
-    }
-
-    public String getInputUserPasswordTooShort() {
-        return inputUserPasswordTooShort;
-    }
-
-    public String getInputUserPasswordOnlySpace() {
-        return inputUserPasswordOnlySpace;
-    }
-
-    public String getInputUserNameOverLength() {
-        return inputUserNameOverLength;
-    }
-
-    public String getInputUserNameWithNumber() {
-        return inputUserNameWithNumber;
-    }
-
-    public String getInputUserNameWithSpecialCharacters() {
-        return inputUserNameWithSpecialCharacters;
-    }
-
-    public String getInputUserNameOnlySpace() {
-        return inputUserNameOnlySpace;
-    }
-
-    public String getInputUserPhoneOverLength() {
-        return inputUserPhoneOverLength;
-    }
-
-    public String getInputUserPhoneTooShort() {
-        return inputUserPhoneTooShort;
-    }
-
-    public String getInputUserPhoneWithAlphabet() {
-        return inputUserPhoneWithAlphabet;
-    }
-
-    public String getInputUserPhoneWithSpecialCharacters() {
-        return inputUserPhoneWithSpecialCharacters;
-    }
-
-    public String getInputUserPhoneOnlySpace() {
-        return inputUserPhoneOnlySpace;
-    }
-
-    public String getInputUserEmailOverLength() {
-        return inputUserEmailOverLength;
-    }
-
-    public String getInputUserEmailWithSpecialCharacters() {
-        return inputUserEmailWithSpecialCharacters;
-    }
-
-    public String getInputUserEmailIncorrectExtension() {
-        return inputUserEmailIncorrectExtension;
-    }
-
-    public String getInputUserEmailHeaderIsSpace() {
-        return inputUserEmailHeaderIsSpace;
-    }
+    public String inputUserEmailHeaderIsSpace;
 }

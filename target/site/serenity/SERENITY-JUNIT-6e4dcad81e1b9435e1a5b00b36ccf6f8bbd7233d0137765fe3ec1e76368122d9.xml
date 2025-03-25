@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><testsuite errors="0" failures="0" name="Test.Web.LoginTest" skipped="0" tests="1" time="5.64" timestamp="2025-03-21 11:46:40"><testcase classname="Test.Web.LoginTest" name="kiểm tra bỏ trống mật khẩu"/></testsuite>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><testsuite errors="0" failures="0" name="Test.Web.LoginTest" skipped="0" tests="1" time="1.15" timestamp="2025-03-25 04:34:39"><testcase classname="Test.Web.LoginTest" name="kiểm tra bỏ trống mật khẩu"/></testsuite>
